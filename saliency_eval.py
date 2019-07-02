@@ -99,6 +99,9 @@ def test(cuda=True):
     import pycat
     import time
     from sal.utils.mask import apply_mask
+    import matplotlib.pyplot as plt
+
+    pycat.config.set_img_protocol_support(False)
 
     # simply load an image
     ims = load_image_as_variable(
@@ -110,15 +113,17 @@ def test(cuda=True):
         ims, [386]
     )  # 386 is an elefant (check sal/datasets/imagenet_synset.py for more)
 
+    def imshow(img):
+        plt.imshow(img.transpose(1, 2, 0) / 255.0)
+        plt.show()
+
     print("You should see a zebra")
-    pycat.show(
+    imshow(
         apply_mask(ims, zebra_mask, boolean=False).cpu()[0].data.numpy() * 128 + 128,
-        auto_normalize=False,
     )
     print("You should see an elefant")
-    pycat.show(
+    imshow(
         apply_mask(ims, elefant_mask, boolean=False).cpu()[0].data.numpy() * 128 + 128,
-        auto_normalize=False,
     )
 
     print("Testing speed with CUDA_ENABLED =", cuda)

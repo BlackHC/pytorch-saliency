@@ -184,7 +184,7 @@ def SimpleCNNBlock(
                 out_channels,
                 kernel_size,
                 stride=stride if layer == 0 else 1,
-                padding=kernel_size / 2,
+                padding=kernel_size // 2,
                 bias=not follow_with_bn,
             )
         )
@@ -216,7 +216,7 @@ def ReducedCNNBlock(
                 out_channels,
                 kernel_size,
                 stride=stride if layer == layers - 1 else 1,
-                padding=kernel_size / 2,
+                padding=kernel_size // 2,
                 bias=not follow_with_bn,
             )
         )
@@ -418,8 +418,8 @@ class EasyModule(Module):
         self.load_state_dict(torch.load(p))
 
 
-Module.save = EasyModule.save.__func__
-Module.restore = EasyModule.restore.__func__
+Module.save = EasyModule.save
+Module.restore = EasyModule.restore
 
 
 def one_hot(labels, depth):
@@ -478,7 +478,7 @@ class Bottleneck(Module):
         activation_fn=lambda: torch.nn.ReLU(inplace=False),
     ):
         super(Bottleneck, self).__init__()
-        bottleneck_channels = out_channels / bottleneck_ratio
+        bottleneck_channels = out_channels // bottleneck_ratio
         self.conv1 = Conv2d(in_channels, bottleneck_channels, kernel_size=1, bias=False)
         self.bn1 = BatchNorm2d(bottleneck_channels)
         self.conv2 = Conv2d(
